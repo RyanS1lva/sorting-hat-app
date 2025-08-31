@@ -43,9 +43,9 @@ Ele apresenta um quiz para determinar a casa de Hogwarts do usuário com base na
 
 ## 🛠️ Tecnologias Utilizadas
 
-Flutter
+- Flutter
 
-Dart
+- Dart
 
 
 
