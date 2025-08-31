@@ -24,7 +24,7 @@ final class Options extends StatelessWidget {
             (o) => Padding(
               padding: const EdgeInsets.all(8.0),
               child: SizedBox(
-                width: 350,
+                width: MediaQuery.of(context).size.width * 0.8,
                 height: 70,
                 child: ElevatedButton(
                   onPressed: () => onRespond(o['house'] as String),

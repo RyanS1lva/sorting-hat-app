@@ -105,6 +105,14 @@ class _QuizAppState extends State<QuizApp> {
                         questionSelected: questionSelected,
                         questions: questions,
                       ),
+                      Text(
+                        '${questionSelected + 1} / ${questions.length}',
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.primaryColor,
+                        ),
+                      )
                     ],
                   ),
                 ),
