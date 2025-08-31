@@ -9,6 +9,7 @@ class Question extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
+      height: 150,
       padding: const EdgeInsets.all(25),
       child: Text(
         text,
