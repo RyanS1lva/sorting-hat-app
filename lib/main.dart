@@ -22,7 +22,7 @@ class _QuizAppState extends State<QuizApp> {
   int questionSelected = 0;
   List<String> choices = [];
   String houseResult = "";
-  Map<String, Color?> housesColors = {
+  Map<String, Color> housesColors = {
     Houses.gryffindor.name: AppColors.gryffindor,
     Houses.slytherin.name: AppColors.slytherin,
     Houses.ravenclaw.name: AppColors.ravenclaw,
@@ -30,16 +30,16 @@ class _QuizAppState extends State<QuizApp> {
   };
 
   void respond(String house) {
-    setState(() {
-      choices.add(house);
-      questionSelected++;
-    });
+    setState(
+      () {
+        choices.add(house);
+        questionSelected++;
 
-    if (!haveQuestionSelected) {
-      setState(() {
-        houseResult = mostChosenHouse(choices).key;
-      });
-    }
+        if (!haveQuestionToRespond) {
+          houseResult = mostChosenHouse(choices).key;
+        }
+      },
+    );
   }
 
   void reset() {
@@ -69,7 +69,7 @@ class _QuizAppState extends State<QuizApp> {
     return houseResult;
   }
 
-  bool get haveQuestionSelected {
+  bool get haveQuestionToRespond {
     return questionSelected < questions.length;
   }
 
@@ -90,79 +90,83 @@ class _QuizAppState extends State<QuizApp> {
           backgroundColor: housesColors[houseResult] ?? AppColors.primaryColor,
           centerTitle: true,
         ),
-        body: haveQuestionSelected
-            ? SizedBox(
-                width: double.infinity,
+        body: haveQuestionToRespond
+            ? SafeArea(
+                child: SizedBox(
+                  width: double.infinity,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Question(
+                        text: questions[questionSelected]['question'] as String,
+                      ),
+                      Options(
+                        onRespond: respond,
+                        questionSelected: questionSelected,
+                        questions: questions,
+                      ),
+                    ],
+                  ),
+                ),
+              )
+            : SafeArea(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Question(
-                      text: questions[questionSelected]['question'] as String,
-                    ),
-                    Options(
-                      onRespond: respond,
-                      questionSelected: questionSelected,
-                      questions: questions,
-                    ),
-                  ],
-                ),
-              )
-            : Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    width: double.infinity,
-                    alignment: Alignment.center,
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: RichText(
-                        text: TextSpan(
-                          text: 'Sua casa é ',
-                          style: const TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.normal,
-                            color: AppColors.primaryColor,
+                    Container(
+                      width: double.infinity,
+                      alignment: Alignment.center,
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: RichText(
+                          text: TextSpan(
+                            text: 'Sua casa é ',
+                            style: const TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.normal,
+                              color: AppColors.primaryColor,
+                            ),
+                            children: <TextSpan>[
+                              TextSpan(
+                                text: houseResult,
+                                style: TextStyle(
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.bold,
+                                  color: housesColors[houseResult],
+                                ),
+                              )
+                            ],
                           ),
-                          children: <TextSpan>[
-                            TextSpan(
-                              text: houseResult,
-                              style: TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
-                                color: housesColors[houseResult],
-                              ),
-                            )
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 350,
+                      height: 70,
+                      child: ElevatedButton(
+                        onPressed: reset,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: housesColors[houseResult],
+                          foregroundColor: AppColors.white,
+                          textStyle: const TextStyle(
+                            fontSize: 20,
+                          ),
+                        ),
+                        child: const Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Fazer teste novamente',
+                            ),
+                            Icon(
+                              Icons.refresh,
+                            ),
                           ],
                         ),
                       ),
                     ),
-                  ),
-                  SizedBox(
-                    width: 350,
-                    height: 70,
-                    child: ElevatedButton(
-                      onPressed: reset,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: housesColors[houseResult],
-                        foregroundColor: AppColors.white,
-                        textStyle: const TextStyle(
-                          fontSize: 20,
-                        ),
-                      ),
-                      child: const Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Fazer teste novamente',
-                          ),
-                          Icon(
-                            Icons.refresh,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
         backgroundColor: AppColors.white,
       ),
